@@ -12,6 +12,8 @@ import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.daynight.Night;
 import pepse.world.trees.Tree;
+import pepse.world.daynight.Sun;
+
 
 public class PepseGameManager extends GameManager {
 //    public PepseGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -34,6 +36,7 @@ public class PepseGameManager extends GameManager {
 
 
         Night.create(gameObjects(), Layer.FOREGROUND, windowController.getWindowDimensions(), 30);
+        Sun.create(gameObjects(), Layer.BACKGROUND, windowController.getWindowDimensions(), 30);
     }
 
     public static void main(String[] args){
