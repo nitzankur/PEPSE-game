@@ -2,7 +2,6 @@ package pepse.world;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
-import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
