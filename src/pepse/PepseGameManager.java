@@ -13,6 +13,9 @@ import pepse.world.Terrain;
 import pepse.world.daynight.Night;
 import pepse.world.trees.Tree;
 import pepse.world.daynight.Sun;
+import pepse.world.daynight.SunHalo;
+
+import java.awt.*;
 
 
 public class PepseGameManager extends GameManager {
@@ -34,9 +37,9 @@ public class PepseGameManager extends GameManager {
         Tree tree = new Tree(gameObjects(),Layer.STATIC_OBJECTS,terrain);
         tree.treesGenerator(0,(int) windowController.getWindowDimensions().x());
 
-
         Night.create(gameObjects(), Layer.FOREGROUND, windowController.getWindowDimensions(), 30);
-        Sun.create(gameObjects(), Layer.BACKGROUND, windowController.getWindowDimensions(), 30);
+        GameObject sun = Sun.create(gameObjects(), Layer.BACKGROUND, windowController.getWindowDimensions(), 30);
+        SunHalo.create(gameObjects(), Layer.BACKGROUND + 10, sun, new Color(255, 255, 0, 20));
     }
 
     public static void main(String[] args){
