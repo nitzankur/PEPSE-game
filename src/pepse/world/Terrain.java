@@ -35,18 +35,19 @@ public class Terrain {
         this.windoeDimensions = WindowDimensions;
     }
 
-    public double groundHeightAt(float x){
+    public float groundHeightAt(float x){
         NoiseGenerator noiseGenerator = new NoiseGenerator(seed);
-        return groundHeightAtX0+ Math.sin(4*(x/5))*noiseGenerator.noise(x)*150;
+        return  groundHeightAtX0+ (float) Math.sin(4*(x/5))* (float) noiseGenerator.noise(x)*150;
     }
 
     public void createInRange(int minX, int maxX){
-        RectangleRenderable blockRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
         for (int i = minX; i < maxX; i+=Block.SIZE) {
+            RectangleRenderable blockRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
             Vector2 blockPos = calculatePos(i);
             gameObjects.addGameObject(new Block(blockPos,new Vector2(Block.SIZE,TERRAIN_DEPTH),blockRenderer),groundLayer);
             for (float j = blockPos.y()+TERRAIN_DEPTH; j < windoeDimensions.y() ; j+=TERRAIN_DEPTH) {
                 Vector2 blockYPos = new Vector2(blockPos.x(),j);
+                blockRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 gameObjects.addGameObject(new Block(blockYPos,new Vector2(Block.SIZE,TERRAIN_DEPTH),blockRenderer),
                         groundLayer);
             }
