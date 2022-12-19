@@ -2,6 +2,7 @@ package pepse;
 
 import danogl.GameManager;
 import danogl.GameObject;
+import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
@@ -20,9 +21,11 @@ public class PepseGameManager extends GameManager {
                                UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         //initialize sky
-        Sky.create(gameObjects(), windowController.getWindowDimensions(), 0);
+        Sky.create(gameObjects(), windowController.getWindowDimensions(), Layer.BACKGROUND);
         //initialize ground
-        Terrain terrain = new Terrain(gameObjects(),1,windowController.getWindowDimensions(),3);
+        Terrain terrain = new Terrain(gameObjects(),
+                Layer.STATIC_OBJECTS,windowController.getWindowDimensions(),20);
+        terrain.createInRange(0,(int) windowController.getWindowDimensions().x());
     }
 
     public static void main(String[] args){
