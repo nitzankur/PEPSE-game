@@ -23,13 +23,11 @@ public class PepseGameManager extends GameManager {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         //initialize sky
         Sky.create(gameObjects(), windowController.getWindowDimensions(), 0);
-<<<<<<< HEAD
 
-        Night.create(gameObjects(), Layer.FOREGROUND, windowController.getWindowDimensions(), 30);
-=======
         //initialize ground
         Terrain terrain = new Terrain(gameObjects(),1,windowController.getWindowDimensions(),3);
->>>>>>> d7210065e19eea3e0f16cea380d0d200d35d91e9
+
+        Night.create(gameObjects(), Layer.FOREGROUND, windowController.getWindowDimensions(), 30);
     }
 
     public static void main(String[] args){
