@@ -27,7 +27,7 @@ public class Sun {
 
         new Transition<Float>(sun, setSunCenter,
                 0f, (float) Math.PI * 2, Transition.LINEAR_INTERPOLATOR_FLOAT,
-                cycleLength, Transition.TransitionType.TRANSITION_LOOP,
+                cycleLength * 2, Transition.TransitionType.TRANSITION_LOOP,
                 null);
 
         return sun;
