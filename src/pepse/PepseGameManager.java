@@ -23,6 +23,7 @@ import java.awt.*;
 public class PepseGameManager extends GameManager {
     private static final float NIGHT_CYCLE_LENGTH = 10;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
+    private static final int TERRAIN_SEED = 20;
 
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
@@ -34,7 +35,7 @@ public class PepseGameManager extends GameManager {
 
         //initialize ground
         Terrain terrain = new Terrain(gameObjects(),
-                Layer.STATIC_OBJECTS, windowController.getWindowDimensions(), 20);
+                Layer.STATIC_OBJECTS, windowController.getWindowDimensions(), TERRAIN_SEED);
         terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
 
         //initialize trees

@@ -1,8 +1,6 @@
 package pepse.world;
 
 import danogl.collisions.GameObjectCollection;
-import danogl.gui.UserInputListener;
-import danogl.gui.WindowController;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
@@ -15,7 +13,7 @@ public class Terrain {
 
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
-    private final Vector2 windoeDimensions;
+    private final Vector2 windowDimensions;
     private final Random random;
 
     private float groundHeightAtX0;
@@ -32,7 +30,7 @@ public class Terrain {
         groundHeightAtX0 = WindowDimensions.y() * HEIGHT_PARAMETER;
         this.seed = seed;
         this.random = new Random(seed);
-        this.windoeDimensions = WindowDimensions;
+        this.windowDimensions = WindowDimensions;
     }
 
     public float groundHeightAt(float x){
@@ -45,7 +43,7 @@ public class Terrain {
             RectangleRenderable blockRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
             Vector2 blockPos = calculatePos(i);
             gameObjects.addGameObject(new Block(blockPos,new Vector2(Block.SIZE,TERRAIN_DEPTH),blockRenderer),groundLayer);
-            for (float j = blockPos.y()+TERRAIN_DEPTH; j < windoeDimensions.y() ; j+=TERRAIN_DEPTH) {
+            for (float j = blockPos.y()+TERRAIN_DEPTH; j < windowDimensions.y() ; j+=TERRAIN_DEPTH) {
                 Vector2 blockYPos = new Vector2(blockPos.x(),j);
                 blockRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 gameObjects.addGameObject(new Block(blockYPos,new Vector2(Block.SIZE,TERRAIN_DEPTH),blockRenderer),
