@@ -14,7 +14,7 @@ import java.util.Random;
 public class Terrain {
 
     private final GameObjectCollection gameObjects;
-    private final int groundLayer;
+    private  final int groundLayer;
     private final Vector2 windoeDimensions;
     private final Random random;
 

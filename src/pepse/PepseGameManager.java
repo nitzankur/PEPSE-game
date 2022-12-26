@@ -31,7 +31,7 @@ public class PepseGameManager extends GameManager {
                 Layer.STATIC_OBJECTS,windowController.getWindowDimensions(),20);
         terrain.createInRange(0,(int) windowController.getWindowDimensions().x());
         //initialize trees
-        Tree tree = new Tree(gameObjects(),Layer.STATIC_OBJECTS,terrain);
+        Tree tree = new Tree(gameObjects(),Layer.STATIC_OBJECTS,terrain::groundHeightAt);
         tree.treesGenerator(0,(int) windowController.getWindowDimensions().x());
 
 
