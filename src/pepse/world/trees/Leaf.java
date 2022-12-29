@@ -1,76 +1,44 @@
 package pepse.world.trees;
 
 import danogl.GameObject;
+import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
+import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
-import pepse.world.Terrain;
+
 
 import java.awt.*;
 import java.util.Random;
-import java.util.concurrent.Callable;
+
 import java.util.function.Consumer;
 
-public class Leaf {
-    private static final float FADEOUT_TIME = 2f;
-    private final GameObjectCollection gameObjects;
-    private final Random random;
-    private final int treeLayer;
+public class Leaf extends GameObject {
 
-    private Color BASE_LEAF_COLOR = new Color(50,200,30);
-
-    public Leaf(GameObjectCollection gameObjects, int treeLayer){
-
-        this.gameObjects = gameObjects;
-        this.random = new Random(20);
-        this.treeLayer = treeLayer;
-    }
-
-    public void leafGenerator(int x,float y){
-        for (int i = x-Block.SIZE * 3; i < x+Block.SIZE *3 ; i++) {
-            for (float j = y; j > y-Block.SIZE*9 ; j-=Block.SIZE) {
-                int rand = random.nextInt(17);
-                if(rand==1){
-                    RectangleRenderable leafRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_LEAF_COLOR));
-                    Block leaf = (new Block(new Vector2(i,j),new Vector2(Block.SIZE,Block.SIZE)
-                            ,leafRenderer));
-                    gameObjects.addGameObject(leaf,treeLayer);
-
-                    Consumer<Float> setLeafAngle =
-                            (angle) -> leaf.renderer().setRenderableAngle(angle);
-                    rand = random.nextInt(200);
-                    new ScheduledTask(leaf,rand,false,() -> new Transition<Float>(leaf, setLeafAngle,
-                            0f, 90f, Transition.CUBIC_INTERPOLATOR_FLOAT,
-                            10f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
-                            null));
-
-
-                    rand = random.nextInt(200);
-                    new ScheduledTask(leaf, (float) rand,false,()-> new Transition<Vector2>(leaf,
-                            leaf::setDimensions, leaf.getDimensions(), leaf.getDimensions().mult(1.25f),
-                            Transition.CUBIC_INTERPOLATOR_VECTOR,
-                            12f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
-                            null));
-
-                    int lifeTime = random.nextInt(50);
-                    Runnable leafFadeOut = ()-> leaf.renderer().fadeOut(FADEOUT_TIME);
-                    Runnable leafVelY = ()-> leaf.transform().setVelocityY(100);
-                    Consumer<Float> leafVelX = (velX)-> leaf.transform().setVelocityX(velX);
-                    new ScheduledTask(leaf,lifeTime,false,()->new Transition<Float>(leaf,leafVelX,-100f,
-                            100f,Transition.LINEAR_INTERPOLATOR_FLOAT,4,
-                            Transition.TransitionType.TRANSITION_BACK_AND_FORTH,null));
-                    new ScheduledTask(leaf,lifeTime+2,false,leafFadeOut);
-                    new ScheduledTask(leaf,lifeTime,false,leafVelY);
-                    gameObjects.layers().shouldLayersCollide(treeLayer, Layer.BACKGROUND,true);
-
-                }
-            }
-        }
+    /**
+     * Construct a new GameObject instance.
+     *
+     * @param topLeftCorner Position of the object, in window coordinates (pixels).
+     *                      Note that (0,0) is the top-left corner of the window.
+     * @param dimensions    Width and height in window coordinates.
+     * @param renderable    The renderable representing the object. Can be null, in which case
+     *                      the GameObject will not be rendered.
+     */
+    public Leaf(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
+        super(topLeftCorner, dimensions, renderable);
 
     }
+
+    @Override
+    public void onCollisionEnter(GameObject other, Collision collision) {
+        super.onCollisionEnter(other, collision);
+        this.transform().setVelocityY(0);
+        System.out.println("collision " +transform().getVelocity().y() );
+    }
+
 }

@@ -40,7 +40,7 @@ public class Tree {
             float y = this.groundHeightAt.apply(i);
             gameObjects.addGameObject(new Block(new Vector2(i,y),new Vector2(Block.SIZE,Block.SIZE)
                     ,trunkRenderer),treeLayer);
-            Leaf leafGenerator =new Leaf(gameObjects,treeLayer);
+            LeafGenerator leafGenerator =new LeafGenerator(gameObjects,treeLayer);
             for (float j =y-Block.SIZE ; j >y-Block.SIZE * 10 ; j-=Block.SIZE) {
                 trunkRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_TRUNK_COLOR));
                 gameObjects.addGameObject(new GameObject(new Vector2(i,j),new Vector2(Block.SIZE,Block.SIZE)
