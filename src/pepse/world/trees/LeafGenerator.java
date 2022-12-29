@@ -29,7 +29,6 @@ public class LeafGenerator {
     }
 
     public void leafGenerator(int x,float y){
-        gameObjects.layers().shouldLayersCollide(treeLayer, Layer.BACKGROUND,true);
         for (int i = x- Block.SIZE * 3; i < x+Block.SIZE *3 ; i++) {
             for (float j = y; j > y-Block.SIZE*9 ; j-=Block.SIZE) {
                 int rand = random.nextInt(17);
@@ -41,16 +40,16 @@ public class LeafGenerator {
 
                     Consumer<Float> setLeafAngle =
                             (angle) -> leaf.renderer().setRenderableAngle(angle);
-                    rand = random.nextInt(200);
+                    rand = random.nextInt(20);
                     new ScheduledTask(leaf,rand,false,() -> new Transition<Float>(leaf, setLeafAngle,
                             0f, 90f, Transition.CUBIC_INTERPOLATOR_FLOAT,
                             10f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                             null));
 
 
-                    rand = random.nextInt(200);
+                    rand = random.nextInt(20);
                     new ScheduledTask(leaf, (float) rand,false,()-> new Transition<Vector2>(leaf,
-                            leaf::setDimensions, leaf.getDimensions(), leaf.getDimensions().mult(1.25f),
+                            leaf::setDimensions, leaf.getDimensions(), leaf.getDimensions().mult(1.05f),
                             Transition.CUBIC_INTERPOLATOR_VECTOR,
                             12f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                             null));
@@ -74,6 +73,8 @@ public class LeafGenerator {
                 }
             }
         }
+
+        gameObjects.layers().shouldLayersCollide(treeLayer, Layer.STATIC_OBJECTS,true);
 
     }
 }

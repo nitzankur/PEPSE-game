@@ -47,7 +47,7 @@ public class Terrain {
                 Vector2 blockYPos = new Vector2(blockPos.x(),j);
                 blockRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 gameObjects.addGameObject(new Block(blockYPos,new Vector2(Block.SIZE,TERRAIN_DEPTH),blockRenderer),
-                        groundLayer);
+                        groundLayer + 1);
             }
         }
     }

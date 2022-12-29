@@ -38,7 +38,7 @@ public class Leaf extends GameObject {
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
         this.transform().setVelocityY(0);
-        System.out.println("collision " +transform().getVelocity().y() );
+//        System.out.println("collision " +transform().getVelocity().y() );
     }
 
 }

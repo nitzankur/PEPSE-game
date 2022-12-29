@@ -28,6 +28,7 @@ public class PepseGameManager extends GameManager {
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
+//        windowController.setTargetFramerate(20);
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
 
         //initialize sky
@@ -40,7 +41,7 @@ public class PepseGameManager extends GameManager {
 
         //initialize trees
 
-        Tree tree = new Tree(gameObjects(),Layer.STATIC_OBJECTS,terrain::groundHeightAt);
+        Tree tree = new Tree(gameObjects(), Layer.STATIC_OBJECTS + 2, terrain::groundHeightAt);
         tree.treesGenerator(0,(int) windowController.getWindowDimensions().x());
 
 
