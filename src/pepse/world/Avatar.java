@@ -99,6 +99,11 @@ public class Avatar extends GameObject {
         }
         return false;
     }
+
+    /**
+     * move sideways
+     * @return
+     */
     private boolean moveSideways() {
         float xVel = 0;
         boolean moved = false;
