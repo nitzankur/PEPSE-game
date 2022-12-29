@@ -35,7 +35,7 @@ public class Terrain {
 
     public float groundHeightAt(float x){
         NoiseGenerator noiseGenerator = new NoiseGenerator(seed);
-        return  groundHeightAtX0+ (float) Math.sin(4*(x/5))* (float) noiseGenerator.noise(x)*150;
+        return  groundHeightAtX0+ (float) Math.sin(x)* (float) noiseGenerator.noise(x)*70;
     }
 
     public void createInRange(int minX, int maxX){
@@ -50,8 +50,6 @@ public class Terrain {
                         groundLayer);
             }
         }
-
-
     }
 
     private Vector2 calculatePos(int x){
