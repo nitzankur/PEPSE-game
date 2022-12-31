@@ -37,6 +37,7 @@ public class Sun {
 
     public static Vector2 calcSunPosition(Vector2 windowDimensions, float angleInSky) {
         Vector2 center = windowDimensions.mult(0.5f);
+//        System.out.println(center);
         float posX = ((float) Math.sin(-angleInSky) * RADIUS_FROM_CENTER_Y) + center.x();
         float posY = ((float) -Math.cos(angleInSky) * RADIUS_FROM_CENTER_X) + center.y();
         return new Vector2(posX, posY);

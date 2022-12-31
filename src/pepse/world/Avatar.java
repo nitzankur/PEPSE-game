@@ -2,6 +2,10 @@ package pepse.world;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
+
+import danogl.collisions.Layer;
+import danogl.components.CoordinateSpace;
+
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
@@ -74,6 +78,8 @@ public class Avatar extends GameObject {
                 idleAnimation, inputListener, imageReader);
         gameObjects.addGameObject(avatar, layer);
         avatar.setTag(AVATAR_TAG);
+
+//        gameObjects.layers().shouldLayersCollide(Layer.DEFAULT, Layer.STATIC_OBJECTS + 1, true);
 
         return avatar;
     }
