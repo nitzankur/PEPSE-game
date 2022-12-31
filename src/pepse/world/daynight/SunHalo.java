@@ -12,6 +12,7 @@ public class SunHalo {
 
     private static final float HALO_FACTOR = 2;
     private static final String SUN_HALO_TAG = "sunHalo";
+
     public static GameObject create(GameObjectCollection gameObjects, int layer,
                                     GameObject sun, Color color) {
         GameObject sunHalo = new GameObject(Vector2.ZERO, sun.getDimensions().mult(HALO_FACTOR),

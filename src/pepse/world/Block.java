@@ -1,6 +1,5 @@
 package pepse.world;
 
-import danogl.GameManager;
 import danogl.GameObject;
 import danogl.components.GameObjectPhysics;
 import danogl.gui.rendering.Renderable;

@@ -2,15 +2,12 @@ package pepse.world;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
-import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
-import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Avatar extends GameObject {
@@ -33,6 +30,7 @@ public class Avatar extends GameObject {
     private final AnimationRenderable walkAnimation;
     private final AnimationRenderable flyAnimation;
     private float currentEnergy;
+
     public Avatar(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
                   UserInputListener inputListener, ImageReader imageReader) {
         super(topLeftCorner, dimensions, renderable);
@@ -81,7 +79,7 @@ public class Avatar extends GameObject {
     }
 
     private boolean fly() {
-        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) &&
+        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) &&
                 inputListener.isKeyPressed(KeyEvent.VK_SHIFT)
                 && currentEnergy > 0) {
             transform().setVelocityY(VELOCITY_Y);
@@ -93,7 +91,7 @@ public class Avatar extends GameObject {
     }
 
     private boolean jump() {
-        if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
             transform().setVelocityY(VELOCITY_Y);
             return true;
         }
@@ -102,18 +100,19 @@ public class Avatar extends GameObject {
 
     /**
      * move sideways
+     *
      * @return
      */
     private boolean moveSideways() {
         float xVel = 0;
         boolean moved = false;
-        if(inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
             xVel -= VELOCITY_X;
             renderer().setRenderable(walkAnimation);
             renderer().setIsFlippedHorizontally(false);
             moved = true;
         }
-        if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
             xVel += VELOCITY_X;
             renderer().setRenderable(walkAnimation);
             renderer().setIsFlippedHorizontally(true);
@@ -124,7 +123,7 @@ public class Avatar extends GameObject {
     }
 
     private void updateEnergy() {
-        if(getVelocity().y() == 0 && currentEnergy < INITIAL_ENERGY) {
+        if (getVelocity().y() == 0 && currentEnergy < INITIAL_ENERGY) {
             currentEnergy += ENERGY_VALUE;
         }
     }

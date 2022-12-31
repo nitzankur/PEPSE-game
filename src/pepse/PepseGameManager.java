@@ -13,9 +13,9 @@ import pepse.world.Avatar;
 import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.daynight.Night;
-import pepse.world.trees.Tree;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
+import pepse.world.trees.Tree;
 
 import java.awt.*;
 
@@ -28,7 +28,7 @@ public class PepseGameManager extends GameManager {
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
-//        windowController.setTargetFramerate(20);
+        windowController.setTargetFramerate(40);
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
 
         //initialize sky
@@ -41,8 +41,8 @@ public class PepseGameManager extends GameManager {
 
         //initialize trees
 
-        Tree tree = new Tree(gameObjects(), Layer.STATIC_OBJECTS + 2, terrain::groundHeightAt);
-        tree.treesGenerator(0,(int) windowController.getWindowDimensions().x());
+        Tree tree = new Tree(gameObjects(), Layer.STATIC_OBJECTS + 2, terrain::groundHeightAt, 20);
+        tree.treesGenerator(0, (int) windowController.getWindowDimensions().x());
 
 
         Night.create(gameObjects(), Layer.FOREGROUND,
@@ -59,7 +59,7 @@ public class PepseGameManager extends GameManager {
                 windowController.getWindowDimensions()));
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new PepseGameManager().run();
     }
 }
