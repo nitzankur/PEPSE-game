@@ -9,9 +9,7 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
-import pepse.world.Avatar;
-import pepse.world.Sky;
-import pepse.world.Terrain;
+import pepse.world.*;
 import pepse.world.daynight.Night;
 import pepse.world.trees.Tree;
 import pepse.world.daynight.Sun;
@@ -21,6 +19,7 @@ import java.awt.*;
 
 
 public class PepseGameManager extends GameManager {
+    public static final String TERRAIN_TAG = "terrain";
     private static final float NIGHT_CYCLE_LENGTH = 10;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int TERRAIN_SEED = 20;
@@ -33,17 +32,17 @@ public class PepseGameManager extends GameManager {
 
         //initialize sky
         Sky.create(gameObjects(), windowController.getWindowDimensions(), Layer.BACKGROUND);
+        camera();
 
         //initialize ground
         Terrain terrain = new Terrain(gameObjects(),
                 Layer.STATIC_OBJECTS, windowController.getWindowDimensions(), TERRAIN_SEED);
-        terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
+//        terrain.createInRange(0, (int) (windowController.getWindowDimensions().x() - (windowController.getWindowDimensions().x() % Block.SIZE) + Block.SIZE));
 
         //initialize trees
 
         Tree tree = new Tree(gameObjects(), Layer.STATIC_OBJECTS + 2, terrain::groundHeightAt);
-        tree.treesGenerator(0,(int) windowController.getWindowDimensions().x());
-
+        tree.treesGenerator(0,(int) (windowController.getWindowDimensions().x() - (windowController.getWindowDimensions().x() % Block.SIZE) + Block.SIZE));
 
         Night.create(gameObjects(), Layer.FOREGROUND,
                 windowController.getWindowDimensions(), NIGHT_CYCLE_LENGTH);
@@ -52,11 +51,21 @@ public class PepseGameManager extends GameManager {
                 windowController.getWindowDimensions(), NIGHT_CYCLE_LENGTH);
         SunHalo.create(gameObjects(), Layer.BACKGROUND + 10, sun, SUN_HALO_COLOR);
 
-        GameObject avatar = Avatar.create(gameObjects(), Layer.DEFAULT,
-                windowController.getWindowDimensions().mult(0.5f), inputListener, imageReader);
+        Vector2 initialAvatarLocation =
+                new Vector2(windowController.getWindowDimensions().mult(0.5f).x(),
+                        terrain.groundHeightAt(
+                                windowController.getWindowDimensions().mult(0.5f).x()) - 60);
 
-        setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(),
+        GameObject avatar = Avatar.create(gameObjects(), Layer.DEFAULT,
+                initialAvatarLocation, inputListener, imageReader);
+
+
+        setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(initialAvatarLocation), windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
+
+        new InfiniteWorldGenerator(gameObjects(), windowController.getWindowDimensions(),
+                50, terrain, tree, avatar, camera());
+
     }
 
     public static void main(String[] args){
