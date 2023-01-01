@@ -20,6 +20,10 @@ import java.awt.*;
 
 public class PepseGameManager extends GameManager {
     public static final String TERRAIN_TAG = "terrain";
+    public static final String TREE_TAG = "tree";
+    public static final String LEAF_TAG = "leaf";
+    public static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
+    public static final int TREE_LAYER = Layer.STATIC_OBJECTS + 2;
     private static final float NIGHT_CYCLE_LENGTH = 10;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int TERRAIN_SEED = 20;
@@ -36,13 +40,14 @@ public class PepseGameManager extends GameManager {
 
         //initialize ground
         Terrain terrain = new Terrain(gameObjects(),
-                Layer.STATIC_OBJECTS, windowController.getWindowDimensions(), TERRAIN_SEED);
+                TERRAIN_LAYER, windowController.getWindowDimensions(), TERRAIN_SEED);
 //        terrain.createInRange(0, (int) (windowController.getWindowDimensions().x() - (windowController.getWindowDimensions().x() % Block.SIZE) + Block.SIZE));
 
         //initialize trees
 
-        Tree tree = new Tree(gameObjects(), Layer.STATIC_OBJECTS + 2, terrain::groundHeightAt,TERRAIN_SEED);
-        tree.treesGenerator(0,(int) (windowController.getWindowDimensions().x() - (windowController.getWindowDimensions().x() % Block.SIZE) + Block.SIZE));
+        Tree tree = new Tree(gameObjects(), Layer.STATIC_OBJECTS + 2,
+                terrain::groundHeightAt, TERRAIN_SEED);
+//        tree.treesGenerator(0,(int) (windowController.getWindowDimensions().x() - (windowController.getWindowDimensions().x() % Block.SIZE) + Block.SIZE));
 
 
         Night.create(gameObjects(), Layer.FOREGROUND,
@@ -61,14 +66,21 @@ public class PepseGameManager extends GameManager {
                 initialAvatarLocation, inputListener, imageReader);
 
 
-        setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(initialAvatarLocation), windowController.getWindowDimensions(),
+        setCamera(new Camera(avatar,
+                windowController.getWindowDimensions().mult(0.5f).subtract(initialAvatarLocation),
+                windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
 
         new InfiniteWorldGenerator(gameObjects(), windowController.getWindowDimensions(),
-                50, terrain, tree, avatar, camera());
+                terrain, tree, camera());
 
         // set avatar collide with tree trunks
-        gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,Layer.STATIC_OBJECTS + 2,true);
+        gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
+                Layer.STATIC_OBJECTS + 2,true);
+
+        // set avatar collide with below terrain layer
+        gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
+                Layer.STATIC_OBJECTS + 1,true);
 
     }
 

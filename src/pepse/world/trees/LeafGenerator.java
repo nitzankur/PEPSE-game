@@ -4,6 +4,7 @@ import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+import pepse.PepseGameManager;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
@@ -47,6 +48,7 @@ public class LeafGenerator {
                     RectangleRenderable leafRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_LEAF_COLOR));
                     Leaf leaf = (new Leaf(new Vector2(i, j), new Vector2(Block.SIZE, Block.SIZE)
                             , leafRenderer, random));
+                    leaf.setTag(PepseGameManager.LEAF_TAG);
                     gameObjects.addGameObject(leaf, treeLayer);
                 }
             }

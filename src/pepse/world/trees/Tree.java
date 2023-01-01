@@ -4,6 +4,7 @@ import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+import pepse.PepseGameManager;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
@@ -46,20 +47,25 @@ public class Tree {
             int rand = random.nextInt(RANDOM_TREES);
             if (rand == 1) {
                 //create trunk
-                RectangleRenderable trunkRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_TRUNK_COLOR));
+                RectangleRenderable trunkRenderer =
+                        new RectangleRenderable(ColorSupplier.approximateColor(BASE_TRUNK_COLOR));
                 float y = this.groundHeightAt.apply(i);
-                gameObjects.addGameObject(new Block(new Vector2(i, y), new Vector2(Block.SIZE, Block.SIZE)
-                        , trunkRenderer), treeLayer);
+                Block block = new Block(new Vector2(i, y),
+                        new Vector2(Block.SIZE, Block.SIZE), trunkRenderer);
+                block.setTag(PepseGameManager.TREE_TAG);
+                gameObjects.addGameObject(block, treeLayer);
                 //random height for trunk
                 rand = random.nextInt(RANDOM_TRUNK)+RANDOM_TRUNK;
                 for (float j = y - Block.SIZE; j > y - Block.SIZE * rand; j -= Block.SIZE) {
                     trunkRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_TRUNK_COLOR));
-                    gameObjects.addGameObject(new Block(new Vector2(i, j), new Vector2(Block.SIZE, Block.SIZE)
-                            , trunkRenderer), treeLayer);
+                    block = new Block(new Vector2(i, j),
+                            new Vector2(Block.SIZE, Block.SIZE), trunkRenderer);
+                    block.setTag(PepseGameManager.TREE_TAG);
+                    gameObjects.addGameObject(block, treeLayer);
                 }
                 //create leaf
                 LeafGenerator leafGenerator = new LeafGenerator(gameObjects, treeLayer + 1, seed);
-                leafGenerator.leafGenerator(i, y - Block.SIZE * rand -LEAF_POS_START);
+                leafGenerator.leafGenerator(i, y - Block.SIZE * rand - LEAF_POS_START);
             }
         }
     }
