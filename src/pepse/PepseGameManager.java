@@ -41,7 +41,7 @@ public class PepseGameManager extends GameManager {
 
         //initialize trees
 
-        Tree tree = new Tree(gameObjects(), Layer.STATIC_OBJECTS + 2, terrain::groundHeightAt);
+        Tree tree = new Tree(gameObjects(), Layer.STATIC_OBJECTS + 2, terrain::groundHeightAt,TERRAIN_SEED);
         tree.treesGenerator(0,(int) (windowController.getWindowDimensions().x() - (windowController.getWindowDimensions().x() % Block.SIZE) + Block.SIZE));
 
 
@@ -66,6 +66,9 @@ public class PepseGameManager extends GameManager {
 
         new InfiniteWorldGenerator(gameObjects(), windowController.getWindowDimensions(),
                 50, terrain, tree, avatar, camera());
+
+        // set avatar collide with tree trunks
+        gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,Layer.STATIC_OBJECTS + 2,true);
 
     }
 

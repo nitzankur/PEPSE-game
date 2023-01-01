@@ -8,6 +8,7 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Random;
 
 public class LeafGenerator {
@@ -30,8 +31,16 @@ public class LeafGenerator {
         this.seed = seed;
     }
 
+    /**
+     * create leafs for a given trunk
+     * @param x the position of the x trunk
+     * @param y the position of the y trunk
+     */
+
     public void leafGenerator(int x, float y) {
         for (int i = x - Block.SIZE * TREE_WIDTH; i < x + Block.SIZE * TREE_WIDTH; i++) {
+            //create random position for leaf
+            Random random = new Random(Objects.hash(i, seed));
             for (float j = y; j > y - Block.SIZE * TREE_HEIGHT; j -= Block.SIZE) {
                 int rand = random.nextInt(RANDOM_LEAF);
                 if (rand == 1) {
@@ -42,7 +51,7 @@ public class LeafGenerator {
                 }
             }
         }
-
+        //make leaf collide with terrain
         gameObjects.layers().shouldLayersCollide(treeLayer, Layer.STATIC_OBJECTS, true);
 
     }

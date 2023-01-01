@@ -16,9 +16,13 @@ public class Tree {
     private final Function<Integer, Float> groundHeightAt;
     private final int seed;
     private GameObjectCollection gameObjects;
-    private Random random;
     private int treeLayer;
     private Color BASE_TRUNK_COLOR = new Color(100, 50, 20);
+
+    private static final int RANDOM_TREES = 10;
+    private static final int RANDOM_TRUNK = 5;
+
+    private static final int LEAF_POS_START = 2;
 
 
     public Tree(GameObjectCollection gameObjects, int treeLayer, Function<Integer, Float> groundHeightAt, int seed) {
@@ -29,25 +33,33 @@ public class Tree {
         this.seed = seed;
     }
 
-    public void treesGenerator(int minX, int minY) {
-        for (int i = minX; i < minY; i += Block.SIZE) {
+    /**
+     * create trees in random position in given x range
+     * @param minX - start of range
+     * @param maxX - end of range
+     */
+
+    public void treesGenerator(int minX, int maxX) {
+        for (int i = minX; i < maxX; i += Block.SIZE) {
+            //choose random position for trees
             Random random = new Random(Objects.hash(i, seed));
-            int rand = random.nextInt(7);
+            int rand = random.nextInt(RANDOM_TREES);
             if (rand == 1) {
+                //create trunk
                 RectangleRenderable trunkRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_TRUNK_COLOR));
                 float y = this.groundHeightAt.apply(i);
                 gameObjects.addGameObject(new Block(new Vector2(i, y), new Vector2(Block.SIZE, Block.SIZE)
                         , trunkRenderer), treeLayer);
-                LeafGenerator leafGenerator = new LeafGenerator(gameObjects, treeLayer + 1, seed);
-                //create trunk
-                rand = random.nextInt(5)+5;
+                //random height for trunk
+                rand = random.nextInt(RANDOM_TRUNK)+RANDOM_TRUNK;
                 for (float j = y - Block.SIZE; j > y - Block.SIZE * rand; j -= Block.SIZE) {
                     trunkRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_TRUNK_COLOR));
                     gameObjects.addGameObject(new Block(new Vector2(i, j), new Vector2(Block.SIZE, Block.SIZE)
                             , trunkRenderer), treeLayer);
                 }
                 //create leaf
-                leafGenerator.leafGenerator(i, y - Block.SIZE * rand -2);
+                LeafGenerator leafGenerator = new LeafGenerator(gameObjects, treeLayer + 1, seed);
+                leafGenerator.leafGenerator(i, y - Block.SIZE * rand -LEAF_POS_START);
             }
         }
     }

@@ -24,6 +24,10 @@ public class Terrain {
     private static final float HEIGHT_PARAMETER = (float) 2 / 3;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private static final int TERRAIN_DEPTH = 20;
+    private static final int TERRAIN_FACTOR_SIN = 100;
+    private static final int TERRAIN_FACTOR = 150;
+
+    private static final int TERRAIN_HEIGHT = 10;
     private int seed;
 
 
@@ -37,24 +41,39 @@ public class Terrain {
         this.windowDimensions = WindowDimensions;
     }
 
+    /**
+     * @param x - position in world
+     * @return the height in given x
+     */
+
     public float groundHeightAt(float x) {
         NoiseGenerator noiseGenerator = new NoiseGenerator(seed);
 
-        return  groundHeightAtX0+ (float) Math.sin(100 * x) * (float) noiseGenerator.noise(x)*150;
+        return groundHeightAtX0 + (float) Math.sin(TERRAIN_FACTOR_SIN * x) * (float) noiseGenerator.noise(x) * TERRAIN_FACTOR;
 
     }
 
+    /**
+     * create terrain n given range
+     *
+     * @param minX - start position
+     * @param maxX - end position
+     */
+
     public void createInRange(int minX, int maxX) {
         for (int i = minX; i < maxX; i += Block.SIZE) {
+            // create new block - along width in given range
             RectangleRenderable blockRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
             Vector2 blockPos = calculatePos(i);
-            Block block = new Block(blockPos,new Vector2(Block.SIZE,TERRAIN_DEPTH),blockRenderer);
+            Block block = new Block(blockPos, new Vector2(Block.SIZE, TERRAIN_DEPTH), blockRenderer);
             block.setTag(PepseGameManager.TERRAIN_TAG);
-            gameObjects.addGameObject(block,groundLayer);
-            for (float j = blockPos.y()+TERRAIN_DEPTH; j < windowDimensions.y() ; j+=TERRAIN_DEPTH) {
-                Vector2 blockYPos = new Vector2(blockPos.x(),j);
+            gameObjects.addGameObject(block, groundLayer);
+            for (float j = blockPos.y() + TERRAIN_DEPTH; j < windowDimensions.y() + TERRAIN_DEPTH * TERRAIN_HEIGHT;
+                 j += TERRAIN_DEPTH) {
+                //creates block in column
+                Vector2 blockYPos = new Vector2(blockPos.x(), j);
                 blockRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
-                block = new Block(blockYPos,new Vector2(Block.SIZE,TERRAIN_DEPTH),blockRenderer);
+                block = new Block(blockYPos, new Vector2(Block.SIZE, TERRAIN_DEPTH), blockRenderer);
                 block.setTag(PepseGameManager.TERRAIN_TAG);
                 gameObjects.addGameObject(block,
                         groundLayer + 1);
@@ -62,6 +81,11 @@ public class Terrain {
         }
     }
 
+    /**
+     *
+     * @param x - return the given x
+     * @return the position of y position
+     */
     private Vector2 calculatePos(int x) {
         double y = Math.floor(groundHeightAt(x) / Block.SIZE * Block.SIZE);
         return new Vector2(x, (float) y);
@@ -70,7 +94,7 @@ public class Terrain {
     private void removeBlock(Block block) {
         Avatar avatar = null;
         for (GameObject gameObject : gameObjects.objectsInLayer(Layer.DEFAULT)) {
-            if(gameObject instanceof Avatar)
+            if (gameObject instanceof Avatar)
                 avatar = (Avatar) gameObject;
         }
 

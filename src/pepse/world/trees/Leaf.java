@@ -23,7 +23,9 @@ public class Leaf extends GameObject {
     private final Random random;
     private final Vector2 leafPos;
 
-    private Transition horizontalTransition;
+    private Transition<Float> horizontalTransition;
+    private Runnable deadManagement;
+
 
 
     /**
@@ -34,16 +36,22 @@ public class Leaf extends GameObject {
      * @param dimensions    Width and height in window coordinates.
      * @param renderable    The renderable representing the object. Can be null, in which case
      *                      the GameObject will not be rendered.
+     *
      */
     public Leaf(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, Random random) {
         super(topLeftCorner, dimensions, renderable);
         this.random = random;
         this.leafPos = this.getCenter();
+        //start cycle with leaf movement
         new ScheduledTask(this, random.nextInt(RANDOM_MOVEMENT), false, this::leafMovement);
+        //set new life
         this.newLife();
     }
 
 
+    /**
+     * set leaf movement when the leaf on the tree
+     */
     private void leafMovement() {
         Consumer<Float> setLeafAngle =
                 (angle) -> this.renderer().setRenderableAngle(angle);
@@ -55,6 +63,9 @@ public class Leaf extends GameObject {
         leafSetDimensions();
     }
 
+    /**
+     * set leaf dimensions when the leaf on the tree
+     */
     private void leafSetDimensions() {
         new Transition<Vector2>(this,
                 this::setDimensions, this.getDimensions(), this.getDimensions().mult(MULT_FACTOR),
@@ -64,14 +75,26 @@ public class Leaf extends GameObject {
 
     }
 
+    /**
+     * Responsible for the process of leaf fall
+     *
+     */
     private void fallingLeaf() {
-        this.renderer().fadeOut(FADEOUT_TIME, this::deadManagement);
+        //scheduled the leaf dead
+        this.deadManagement =()->new ScheduledTask(this, random.nextInt(5), false, this::newLife);
+        this.renderer().fadeOut(FADEOUT_TIME, this.deadManagement);
+        //set velocity in y and x for thr falling
         Consumer<Float> leafVelX = (velX) -> this.transform().setVelocityX(velX);
         this.transform().setVelocityY(LEAF_FALLING_VEL);
+        //save the transition for remove him when collision occur.
         this.horizontalTransition = new Transition<Float>(this, leafVelX, -HORIZONTAL_FALL,
                 HORIZONTAL_FALL, Transition.LINEAR_INTERPOLATOR_FLOAT, 1,
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
     }
+
+    /**
+     * after the leaf falling set him again in the same position and same velocity
+     */
 
     private void newLife() {
         this.setVelocity(Vector2.ZERO);
@@ -80,15 +103,14 @@ public class Leaf extends GameObject {
         new ScheduledTask(this, random.nextInt(RANDOM_FALLING), false, this::fallingLeaf);
     }
 
-    private void deadManagement() {
-        new ScheduledTask(this, random.nextInt(5), false, this::newLife);
-    }
+
 
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        this.transform().setVelocityY(0);
+        // set velocity to zero
+        this.transform().setVelocity(Vector2.ZERO);
         this.removeComponent(this.horizontalTransition);
 
     }
