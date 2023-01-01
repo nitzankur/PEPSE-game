@@ -8,7 +8,7 @@ import pepse.PepseGameManager;
 import pepse.world.trees.Tree;
 
 public class InfiniteWorldGenerator extends GameObject {
-    private static final int BLOCK_OFFSET_FACTOR = 5;
+    private static final int BLOCK_OFFSET_FACTOR = 3;
     private GameObjectCollection gameObjects;
     private float curMinX;
     private float curMaxX;
@@ -36,7 +36,11 @@ public class InfiniteWorldGenerator extends GameObject {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+        createObjects();
+        removeObjects();
+    }
 
+    private void createObjects() {
         if (camera.getCenter().x() - halfDimension < curMinX) {
             float newMinX = camera.getCenter().x() - halfDimension;
             newMinX = newMinX - (newMinX % Block.SIZE) - Block.SIZE;
@@ -54,7 +58,6 @@ public class InfiniteWorldGenerator extends GameObject {
             curMaxX = newMaxX;
             curMinX = curMaxX - (2 * halfDimension) - Block.SIZE;
         }
-        removeObjects();
     }
 
     private void removeObjects() {
@@ -75,7 +78,8 @@ public class InfiniteWorldGenerator extends GameObject {
             }
 
             if (tag.equals(PepseGameManager.LEAF_TAG)) {
-                if (gameObject.getCenter().x() > curMaxX || gameObject.getCenter().x() < curMinX) {
+                if (gameObject.getCenter().x() > curMaxX + (Block.SIZE * 3) ||
+                        gameObject.getCenter().x() < curMinX  - (Block.SIZE * 3)) {
                     gameObjects.removeGameObject(gameObject, PepseGameManager.TREE_LAYER + 1);
                 }
             }
