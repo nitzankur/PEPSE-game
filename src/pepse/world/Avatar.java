@@ -2,10 +2,6 @@ package pepse.world;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
-
-import danogl.collisions.Layer;
-import danogl.components.CoordinateSpace;
-
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
@@ -14,6 +10,9 @@ import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
 
+/**
+ * Avatar in pepse game
+ */
 public class Avatar extends GameObject {
     private static final float VELOCITY_X = 300;
     private static final float VELOCITY_Y = -300;
@@ -35,6 +34,14 @@ public class Avatar extends GameObject {
     private final AnimationRenderable flyAnimation;
     private float currentEnergy;
 
+    /**
+     * constructs a game object of avatar, with animations
+     * @param topLeftCorner avatar initial position
+     * @param dimensions avatar dimensions
+     * @param renderable avatar renderable
+     * @param inputListener listener of keyboard
+     * @param imageReader avatar image reader
+     */
     public Avatar(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
                   UserInputListener inputListener, ImageReader imageReader) {
         super(topLeftCorner, dimensions, renderable);
@@ -63,6 +70,15 @@ public class Avatar extends GameObject {
 
     }
 
+    /**
+     * create an avatar in the game
+     * @param gameObjects pepse game objects
+     * @param layer avatar layer
+     * @param topLeftCorner avatar initial position
+     * @param inputListener listener of keyboard
+     * @param imageReader avatar image reader
+     * @return game object of avatar
+     */
     public static GameObject create(GameObjectCollection gameObjects, int layer,
                                     Vector2 topLeftCorner, UserInputListener inputListener,
                                     ImageReader imageReader) {
@@ -79,11 +95,13 @@ public class Avatar extends GameObject {
         gameObjects.addGameObject(avatar, layer);
         avatar.setTag(AVATAR_TAG);
 
-//        gameObjects.layers().shouldLayersCollide(Layer.DEFAULT, Layer.STATIC_OBJECTS + 1, true);
-
         return avatar;
     }
 
+    /**
+     * check if avatar needs to fly, and do so
+     * @return true if avatar flew
+     */
     private boolean fly() {
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) &&
                 inputListener.isKeyPressed(KeyEvent.VK_SHIFT)
@@ -96,6 +114,10 @@ public class Avatar extends GameObject {
         return false;
     }
 
+    /**
+     * check if avatar needs to jump, and do so
+     * @return true if avatar jumped
+     */
     private boolean jump() {
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0) {
             transform().setVelocityY(VELOCITY_Y);
@@ -105,9 +127,8 @@ public class Avatar extends GameObject {
     }
 
     /**
-     * move sideways
-     *
-     * @return
+     * check if avatar needs to move sideways, and do so
+     * @return true if avatar moved
      */
     private boolean moveSideways() {
         float xVel = 0;
@@ -128,12 +149,24 @@ public class Avatar extends GameObject {
         return moved;
     }
 
+    /**
+     * update energy if criteria met
+     */
     private void updateEnergy() {
         if (getVelocity().y() == 0 && currentEnergy < INITIAL_ENERGY) {
             currentEnergy += ENERGY_VALUE;
         }
     }
 
+    /**
+     * update the avatar, check movement and update energy
+     * @param deltaTime The time elapsed, in seconds, since the last frame. Can
+     *                  be used to determine a new position/velocity by multiplying
+     *                  this delta with the velocity/acceleration respectively
+     *                  and adding to the position/velocity:
+     *                  velocity += deltaTime*acceleration
+     *                  pos += deltaTime*velocity
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);

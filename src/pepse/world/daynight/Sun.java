@@ -10,12 +10,23 @@ import danogl.util.Vector2;
 import java.awt.*;
 import java.util.function.Consumer;
 
+/**
+ * Sun class orbiting pepse game
+ */
 public class Sun {
     private static final Float RADIUS_FROM_CENTER_X = 400f;
-    private static final Float RADIUS_FROM_CENTER_Y = 600f;
+    private static final Float RADIUS_FROM_CENTER_Y = 700f;
     private static final Vector2 SUN_DIMENSIONS = new Vector2(200, 200);
     private static final String SUN_TAG = "sun";
 
+    /**
+     * creates a sun object and adds transition functionality
+     * @param gameObjects pepse game objects
+     * @param layer layer to put sun in
+     * @param windowDimensions pepse window dimensions
+     * @param cycleLength day cycle length in seconds
+     * @return sun game object
+     */
     public static GameObject create(GameObjectCollection gameObjects, int layer,
                                     Vector2 windowDimensions, float cycleLength) {
         GameObject sun = new GameObject(Vector2.ZERO, SUN_DIMENSIONS,
@@ -35,9 +46,14 @@ public class Sun {
         return sun;
     }
 
+    /**
+     * calculates the suns location based on angle
+     * @param windowDimensions pepse window dimensions
+     * @param angleInSky angle of sun
+     * @return vector of sun position
+     */
     public static Vector2 calcSunPosition(Vector2 windowDimensions, float angleInSky) {
         Vector2 center = windowDimensions.mult(0.5f);
-//        System.out.println(center);
         float posX = ((float) Math.sin(-angleInSky) * RADIUS_FROM_CENTER_Y) + center.x();
         float posY = ((float) -Math.cos(angleInSky) * RADIUS_FROM_CENTER_X) + center.y();
         return new Vector2(posX, posY);

@@ -16,38 +16,46 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 import java.awt.*;
+import java.util.HashMap;
 
 
 public class PepseGameManager extends GameManager {
     public static final String TERRAIN_TAG = "terrain";
+    public static final String BOTTOM_TERRAIN_TAG=  "bottom_terrain";
     public static final String TREE_TAG = "tree";
     public static final String LEAF_TAG = "leaf";
     public static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
-    public static final int TREE_LAYER = Layer.STATIC_OBJECTS + 2;
+    public static final int BOTTOM_TERRAIN_LAYER = TERRAIN_LAYER + 1;
+    public static final int TREE_LAYER = BOTTOM_TERRAIN_LAYER + 1;
+    public static final int LEAF_LAYER = TREE_LAYER + 1;
+    public static final HashMap<String, Integer> TAG_LAYER_MAP = new HashMap<String, Integer>();
     private static final float NIGHT_CYCLE_LENGTH = 10;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int TERRAIN_SEED = 20;
 
+    private void createTagLayerMap() {
+        TAG_LAYER_MAP.put(TERRAIN_TAG, TERRAIN_LAYER);
+        TAG_LAYER_MAP.put(BOTTOM_TERRAIN_TAG, BOTTOM_TERRAIN_LAYER);
+        TAG_LAYER_MAP.put(TREE_TAG, TREE_LAYER);
+        TAG_LAYER_MAP.put(LEAF_TAG, LEAF_LAYER);
+    }
+
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
-        windowController.setTargetFramerate(40);
+//        windowController.setTargetFramerate(40);
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
 
         //initialize sky
         Sky.create(gameObjects(), windowController.getWindowDimensions(), Layer.BACKGROUND);
-        camera();
 
         //initialize ground
         Terrain terrain = new Terrain(gameObjects(),
                 TERRAIN_LAYER, windowController.getWindowDimensions(), TERRAIN_SEED);
-//        terrain.createInRange(0, (int) (windowController.getWindowDimensions().x() - (windowController.getWindowDimensions().x() % Block.SIZE) + Block.SIZE));
 
         //initialize trees
-
-        Tree tree = new Tree(gameObjects(), Layer.STATIC_OBJECTS + 2,
+        Tree tree = new Tree(gameObjects(), TREE_LAYER,
                 terrain::groundHeightAt, TERRAIN_SEED);
-//        tree.treesGenerator(0,(int) (windowController.getWindowDimensions().x() - (windowController.getWindowDimensions().x() % Block.SIZE) + Block.SIZE));
 
 
         Night.create(gameObjects(), Layer.FOREGROUND,
@@ -71,16 +79,16 @@ public class PepseGameManager extends GameManager {
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
 
+        createTagLayerMap();
+
         new InfiniteWorldGenerator(gameObjects(), windowController.getWindowDimensions(),
                 terrain, tree, camera());
 
-        // set avatar collide with tree trunks
+        // set avatar collide with tree trunks and bottom terrain layer
         gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
-                Layer.STATIC_OBJECTS + 2,true);
-
-        // set avatar collide with below terrain layer
+                PepseGameManager.TREE_LAYER, true);
         gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
-                Layer.STATIC_OBJECTS + 1,true);
+                PepseGameManager.BOTTOM_TERRAIN_LAYER, true);
 
     }
 

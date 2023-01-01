@@ -7,19 +7,30 @@ import danogl.util.Vector2;
 import pepse.PepseGameManager;
 import pepse.world.trees.Tree;
 
+/**
+ * create an infinite world
+ */
 public class InfiniteWorldGenerator extends GameObject {
     private static final int BLOCK_OFFSET_FACTOR = 3;
-    private GameObjectCollection gameObjects;
+    private final GameObjectCollection gameObjects;
     private float curMinX;
     private float curMaxX;
-    private float halfDimension;
-    private Terrain terrain;
-    private Tree tree;
-    private Camera camera;
+    private final float halfDimension;
+    private final Terrain terrain;
+    private final Tree tree;
+    private final Camera camera;
 
+    /**
+     * infinite world constructor
+     * @param gameObjects game objects
+     * @param windowDimensions pepse dimensions
+     * @param terrain Terrain object to create terrain in
+     * @param tree Tree object to create trees and leaves in
+     * @param camera Camera object of pepse game
+     */
     public InfiniteWorldGenerator(GameObjectCollection gameObjects, Vector2 windowDimensions,
                                   Terrain terrain, Tree tree, Camera camera) {
-        super(Vector2.ZERO, Vector2.ZERO, null);
+        super(Vector2.ZERO, Vector2.ZERO,  null);
         this.halfDimension = windowDimensions.mult(0.5f).x() -
                 (windowDimensions.mult(0.5f).x() % Block.SIZE) + (Block.SIZE * BLOCK_OFFSET_FACTOR);
         this.curMinX = 0;
@@ -33,6 +44,15 @@ public class InfiniteWorldGenerator extends GameObject {
         this.tree.treesGenerator((int) curMinX, (int) curMaxX);
     }
 
+    /**
+     * updates the world, adding objects in range and removing objects out of range
+     * @param deltaTime The time elapsed, in seconds, since the last frame. Can
+     *                  be used to determine a new position/velocity by multiplying
+     *                  this delta with the velocity/acceleration respectively
+     *                  and adding to the position/velocity:
+     *                  velocity += deltaTime*acceleration
+     *                  pos += deltaTime*velocity
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -40,6 +60,9 @@ public class InfiniteWorldGenerator extends GameObject {
         removeObjects();
     }
 
+    /**
+     * create objects in range (terrain, trees and leaves)
+     */
     private void createObjects() {
         if (camera.getCenter().x() - halfDimension < curMinX) {
             float newMinX = camera.getCenter().x() - halfDimension;
@@ -60,28 +83,17 @@ public class InfiniteWorldGenerator extends GameObject {
         }
     }
 
+    /**
+     * remove objects out of range (terrain, trees and leaves)
+     */
     private void removeObjects() {
         for (GameObject gameObject : gameObjects) {
             String tag = gameObject.getTag();
 
-            if (tag.equals(PepseGameManager.TERRAIN_TAG)) {
-                if (gameObject.getCenter().x() > curMaxX || gameObject.getCenter().x() < curMinX) {
-                    gameObjects.removeGameObject(gameObject, PepseGameManager.TERRAIN_LAYER);
-                    gameObjects.removeGameObject(gameObject, PepseGameManager.TERRAIN_LAYER + 1);
-                }
-            }
-
-            if (tag.equals(PepseGameManager.TREE_TAG)) {
-                if (gameObject.getCenter().x() > curMaxX || gameObject.getCenter().x() < curMinX) {
-                    gameObjects.removeGameObject(gameObject, PepseGameManager.TREE_LAYER);
-                }
-            }
-
-            if (tag.equals(PepseGameManager.LEAF_TAG)) {
+            if (PepseGameManager.TAG_LAYER_MAP.containsKey(tag)) {
                 if (gameObject.getCenter().x() > curMaxX + (Block.SIZE * 3) ||
-                        gameObject.getCenter().x() < curMinX  - (Block.SIZE * 3)) {
-                    gameObjects.removeGameObject(gameObject, PepseGameManager.TREE_LAYER + 1);
-                }
+                        gameObject.getCenter().x() < curMinX  - (Block.SIZE * 3))
+                    gameObjects.removeGameObject(gameObject, PepseGameManager.TAG_LAYER_MAP.get(tag));
             }
         }
     }
