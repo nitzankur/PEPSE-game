@@ -59,12 +59,17 @@ public class PepseGameManager extends GameManager {
         Tree tree = new Tree(gameObjects(), TREE_LAYER,
                 terrain::groundHeightAt, TERRAIN_SEED);
 
+        initializeAvatar(windowController,inputListener,imageReader,terrain);
 
         //initialize Infinite World
         new InfiniteWorldGenerator(gameObjects(), windowController.getWindowDimensions(),
                 terrain, tree, camera());
 
-        initializeAvatar(windowController,inputListener,imageReader,terrain);
+        // set avatar collide with tree trunks and bottom terrain layer
+        gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
+                PepseGameManager.TREE_LAYER, true);
+        gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
+                PepseGameManager.BOTTOM_TERRAIN_LAYER, true);
 
     }
 
@@ -108,12 +113,6 @@ public class PepseGameManager extends GameManager {
                 windowController.getWindowDimensions()));
 
         createTagLayerMap();
-
-        // set avatar collide with tree trunks and bottom terrain layer
-        gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
-                PepseGameManager.TREE_LAYER, true);
-        gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
-                PepseGameManager.BOTTOM_TERRAIN_LAYER, true);
     }
 
     public static void main(String[] args) {
