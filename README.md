@@ -1,8 +1,8 @@
 mikehash
-<nitzan>
+nitzanknoll
 
+Explanation of differences of UMLs:
 
-<Explanation of differences of UMLs>
 
 
 Infinite World:
@@ -22,7 +22,23 @@ searching their tag names (terrain, tree, or leaf) and removing them from their
 respective layers.
 
 
-<Explanation of Tree design>
+Explanation of Tree design:
+We chose to implement the trees using three classes:
+a Tree class that creates the tree as a whole, a LeafGenerator class that generates
+the leaves and a leaf class. In the Tree department we produce the trunk of the tree
+which consists of blocks,Tree receives in its constructor the groundHeightAt function.
+the tree department calls LeafGenerator which is responsible for creating the top of the tree
+The Leaf class - inherits from GameObjects and is responsible for creating a leaf with
+its entire life cycle .The class has four functions in addition to the functions of GameObjects,
+two of which are responsible for the movement of the leaf when it is on the tree,
+one is responsible for the fall of the leaf and one for "new life" 
+for the leaf - to put it back in its place with the appropriate settings.
+In this way, each department has its own designated responsibility,
+the leaf's movement process is private at the leaf class's, and thus we maintain 
+the principle of encapsulation. We chose that terrain will transfer the function 
+to the tree so that the tree class does not have to know the specific 
+implementation of groundHeightAt and thus there will be programming for the interface 
+and not for the implementation.
 
 
 Design dilemmas:
