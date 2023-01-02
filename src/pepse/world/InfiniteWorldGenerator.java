@@ -42,6 +42,7 @@ public class InfiniteWorldGenerator extends GameObject {
         gameObjects.addGameObject(this);
         this.terrain.createInRange((int) curMinX, (int) curMaxX);
         this.tree.treesGenerator((int) curMinX, (int) curMaxX);
+
     }
 
     /**

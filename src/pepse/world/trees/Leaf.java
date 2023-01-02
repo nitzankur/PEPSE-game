@@ -19,6 +19,10 @@ public class Leaf extends GameObject {
     private static final float MULT_FACTOR = 1.1f;
     private static final int RANDOM_MOVEMENT = 30;
     private static final int RANDOM_FALLING = 50;
+
+    private static final int TRANSITION_TIME = 2;
+    private static final int TRANSITION_TIME_LEAF_DIMENSION = 5;
+    private static final int RANDOM_NEW_LEAF = 5;
     private final Random random;
     private final Vector2 leafPos;
     private Transition<Float> horizontalTransition;
@@ -57,7 +61,7 @@ public class Leaf extends GameObject {
         new Transition<Float>(this,
                 setLeafAngle,
                 -ANGLE_RANGE, ANGLE_RANGE, Transition.CUBIC_INTERPOLATOR_FLOAT,
-                2f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
+                TRANSITION_TIME, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null);
         leafSetDimensions();
     }
@@ -69,7 +73,7 @@ public class Leaf extends GameObject {
         new Transition<Vector2>(this,
                 this::setDimensions, this.getDimensions(), this.getDimensions().mult(MULT_FACTOR),
                 Transition.CUBIC_INTERPOLATOR_VECTOR,
-                5, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
+                TRANSITION_TIME_LEAF_DIMENSION, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null);
 
     }
@@ -82,7 +86,7 @@ public class Leaf extends GameObject {
         //scheduled the leaf dead
         this.deadManagement =
                 () -> new ScheduledTask(
-                        this, random.nextInt(5), false, this::newLife);
+                        this, random.nextInt(RANDOM_NEW_LEAF), false, this::newLife);
         this.renderer().fadeOut(FADEOUT_TIME, this.deadManagement);
         //set velocity in y and x for thr falling
         Consumer<Float> leafVelX = (velX) -> this.transform().setVelocityX(velX);
@@ -104,6 +108,14 @@ public class Leaf extends GameObject {
         new ScheduledTask(this,
                 random.nextInt(RANDOM_FALLING), false, this::fallingLeaf);
     }
+
+    /**
+     *
+     * @param other The GameObject with which a collision occurred.
+     * @param collision Information regarding this collision.
+     *                  A reasonable elastic behavior can be achieved with:
+     *                  setVelocity(getVelocity().flipped(collision.getNormal()));
+     */
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {

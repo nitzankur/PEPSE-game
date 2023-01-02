@@ -26,6 +26,13 @@ public class Terrain {
     private final float groundHeightAtX0;
     private final int seed;
 
+    /**
+     *
+     * @param gameObjects all the game objects in the game
+     * @param groundLayer the layer of the ground
+     * @param WindowDimensions the dimension of screen
+     * @param seed - start seed
+     */
 
     public Terrain(GameObjectCollection gameObjects, int groundLayer, Vector2 WindowDimensions, int seed) {
 

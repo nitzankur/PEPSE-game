@@ -32,6 +32,10 @@ public class PepseGameManager extends GameManager {
     private static final float NIGHT_CYCLE_LENGTH = 10;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     private static final int TERRAIN_SEED = 20;
+    private static final int SUN_ADDITIVE_LAYER = 10;
+    private static final int AVATAR_ADDITIVE_LOCATION = 60;
+
+    private static final float AVATAR_FACTOR_LOCATION = 0.5f;
 
     private void createTagLayerMap() {
         TAG_LAYER_MAP.put(TERRAIN_TAG, TERRAIN_LAYER);
@@ -43,11 +47,9 @@ public class PepseGameManager extends GameManager {
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
-//        windowController.setTargetFramerate(40);
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
 
-        //initialize sky
-        Sky.create(gameObjects(), windowController.getWindowDimensions(), Layer.BACKGROUND);
+        initializeDayNightAndSky(windowController);
 
         //initialize ground
         Terrain terrain = new Terrain(gameObjects(),
@@ -58,38 +60,60 @@ public class PepseGameManager extends GameManager {
                 terrain::groundHeightAt, TERRAIN_SEED);
 
 
+        //initialize Infinite World
+        new InfiniteWorldGenerator(gameObjects(), windowController.getWindowDimensions(),
+                terrain, tree, camera());
+
+        initializeAvatar(windowController,inputListener,imageReader,terrain);
+
+    }
+
+
+    /**
+     *  initialize sky, night and sun
+     */
+
+    private void initializeDayNightAndSky(WindowController windowController){
+        //initialize sky
+        Sky.create(gameObjects(), windowController.getWindowDimensions(), Layer.BACKGROUND);
+        //initialize night
         Night.create(gameObjects(), Layer.FOREGROUND,
                 windowController.getWindowDimensions(), NIGHT_CYCLE_LENGTH);
-
+        //initialize sun
         GameObject sun = Sun.create(gameObjects(), Layer.BACKGROUND,
                 windowController.getWindowDimensions(), NIGHT_CYCLE_LENGTH);
-        SunHalo.create(gameObjects(), Layer.BACKGROUND + 10, sun, SUN_HALO_COLOR);
+        SunHalo.create(gameObjects(), Layer.BACKGROUND + SUN_ADDITIVE_LAYER, sun, SUN_HALO_COLOR);
+    }
 
+    /**
+     * initialize avatar and set the camera to follow after him.
+     */
+
+    private void initializeAvatar(WindowController windowController,UserInputListener inputListener, ImageReader
+                                  imageReader,Terrain terrain){
+        //initialize avatar
         Vector2 initialAvatarLocation =
-                new Vector2(windowController.getWindowDimensions().mult(0.5f).x(),
+                new Vector2(windowController.getWindowDimensions().mult(AVATAR_FACTOR_LOCATION).x(),
                         terrain.groundHeightAt(
-                                windowController.getWindowDimensions().mult(0.5f).x()) - 60);
+                                windowController.getWindowDimensions().mult(AVATAR_FACTOR_LOCATION).x()) -
+                                AVATAR_ADDITIVE_LOCATION);
 
         GameObject avatar = Avatar.create(gameObjects(), Layer.DEFAULT,
                 initialAvatarLocation, inputListener, imageReader);
 
-
+        //initialize camera
         setCamera(new Camera(avatar,
-                windowController.getWindowDimensions().mult(0.5f).subtract(initialAvatarLocation),
+                windowController.getWindowDimensions().mult(AVATAR_FACTOR_LOCATION).subtract(initialAvatarLocation),
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
 
         createTagLayerMap();
-
-        new InfiniteWorldGenerator(gameObjects(), windowController.getWindowDimensions(),
-                terrain, tree, camera());
 
         // set avatar collide with tree trunks and bottom terrain layer
         gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
                 PepseGameManager.TREE_LAYER, true);
         gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
                 PepseGameManager.BOTTOM_TERRAIN_LAYER, true);
-
     }
 
     public static void main(String[] args) {
