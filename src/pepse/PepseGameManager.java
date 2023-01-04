@@ -58,11 +58,11 @@ public class PepseGameManager extends GameManager {
         Tree tree = new Tree(gameObjects(), TREE_LAYER,
                 terrain::groundHeightAt, TERRAIN_SEED);
 
-        initializeAvatar(windowController,inputListener,imageReader,terrain);
+        GameObject avatar = initializeAvatar(windowController,inputListener,imageReader,terrain);
 
         //initialize Infinite World
         new InfiniteWorldGenerator(gameObjects(), windowController.getWindowDimensions(),
-                terrain, tree, camera());
+                terrain, tree, camera(), avatar);
 
         // set avatar collide with tree trunks and bottom terrain layer
         gameObjects().layers().shouldLayersCollide(Layer.DEFAULT,
@@ -91,10 +91,12 @@ public class PepseGameManager extends GameManager {
 
     /**
      * initialize avatar and set the camera to follow after him.
+     *
+     * @return avatar game object
      */
 
-    private void initializeAvatar(WindowController windowController,UserInputListener inputListener, ImageReader
-                                  imageReader,Terrain terrain){
+    private GameObject initializeAvatar(WindowController windowController, UserInputListener inputListener, ImageReader
+                                  imageReader, Terrain terrain){
         //initialize avatar
         Vector2 initialAvatarLocation =
                 new Vector2(windowController.getWindowDimensions().mult(AVATAR_FACTOR_LOCATION).x(),
@@ -112,6 +114,7 @@ public class PepseGameManager extends GameManager {
                 windowController.getWindowDimensions()));
 
         createTagLayerMap();
+        return avatar;
     }
 
     public static void main(String[] args) {

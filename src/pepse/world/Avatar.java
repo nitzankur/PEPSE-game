@@ -29,7 +29,7 @@ public class Avatar extends GameObject {
     private static final float AVATAR_SIZE = 50;
     private static final String AVATAR_TAG = "avatar";
     private static final float START_SLOWING_DOWN = -150;
-    private static final float SLOW_DOWN_FACTOR = 0.98f;
+    private static final float SLOW_DOWN_FACTOR = 0.985f;
     private final UserInputListener inputListener;
     private final AnimationRenderable idleAnimation;
     private final AnimationRenderable walkAnimation;

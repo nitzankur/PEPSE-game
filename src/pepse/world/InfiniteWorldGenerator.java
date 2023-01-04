@@ -16,6 +16,7 @@ public class InfiniteWorldGenerator extends GameObject {
     private float curMinX;
     private float curMaxX;
     private final float halfDimension;
+    private GameObject avatar;
     private final Terrain terrain;
     private final Tree tree;
     private final Camera camera;
@@ -29,10 +30,11 @@ public class InfiniteWorldGenerator extends GameObject {
      * @param camera Camera object of pepse game
      */
     public InfiniteWorldGenerator(GameObjectCollection gameObjects, Vector2 windowDimensions,
-                                  Terrain terrain, Tree tree, Camera camera) {
+                                  Terrain terrain, Tree tree, Camera camera, GameObject avatar) {
         super(Vector2.ZERO, Vector2.ZERO,  null);
         this.halfDimension = windowDimensions.mult(0.5f).x() -
                 (windowDimensions.mult(0.5f).x() % Block.SIZE) + (Block.SIZE * BLOCK_OFFSET_FACTOR);
+        this.avatar = avatar;
         this.curMinX = 0;
         this.curMaxX = this.curMinX + (2 * this.halfDimension) + Block.SIZE;
         this.terrain = terrain;
@@ -59,6 +61,7 @@ public class InfiniteWorldGenerator extends GameObject {
         super.update(deltaTime);
         createObjects();
         removeObjects();
+        fixAvatarPosition();
     }
 
     /**
@@ -96,6 +99,14 @@ public class InfiniteWorldGenerator extends GameObject {
                         gameObject.getCenter().x() < curMinX  - (Block.SIZE * 3))
                     gameObjects.removeGameObject(gameObject, PepseGameManager.TAG_LAYER_MAP.get(tag));
             }
+        }
+    }
+
+    private void fixAvatarPosition() {
+        if (avatar.getCenter().y() > terrain.groundHeightAt(avatar.getCenter().x()) + 150) {
+            Vector2 newCenter = new Vector2(avatar.getCenter().x(),
+                    terrain.groundHeightAt(avatar.getCenter().x()) - 30);
+            avatar.setCenter(newCenter);
         }
     }
 }
