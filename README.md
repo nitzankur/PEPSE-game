@@ -2,7 +2,24 @@ mikehash
 nitzanknoll
 
 Explanation of differences of UMLs:
-
+There were three main changes between the two UMLs: 
+1. Addition of the LeafGenerator class in the final UML.
+2. Adding the InfiniteWorldGenerator class in the final UML
+3. Downloading the connection between Sky and the avatar that we thought would be 
+there at the beginning.
+Instead of the leafGenerator method that we thought would be in the Tree,
+we realized that in our view it makes more sense to make a dedicated class that
+will have one responsibility - this way we gain both code readability, 
+and a substantial separation between things.
+At first, we thought it would make sense to create the infinite world in the
+PepseGameManager class, when the method responsible for this createInfiniteWorld would call 
+initializeGame from an infinite loop.
+After that we realized that it makes more sense to make a separate 
+class that will inherit from gameObject and thus manage the creation of the infinite game
+Before we started writing the program, we thought that the sun would follow the avatar
+and that it would receive its position and thus know how to rotate around it. After that, 
+we realized that the sun does not need this information, and it is enough to transfer the location of the 
+camera to it.
 
 
 Infinite World:
