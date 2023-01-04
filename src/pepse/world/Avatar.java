@@ -81,7 +81,7 @@ public class Avatar extends GameObject {
      * @param imageReader avatar image reader
      * @return game object of avatar
      */
-    public static GameObject create(GameObjectCollection gameObjects, int layer,
+    public static Avatar create(GameObjectCollection gameObjects, int layer,
                                     Vector2 topLeftCorner, UserInputListener inputListener,
                                     ImageReader imageReader) {
         String[] idleAnimationPaths = new String[3];

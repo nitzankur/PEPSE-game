@@ -12,11 +12,12 @@ import pepse.world.trees.Tree;
  */
 public class InfiniteWorldGenerator extends GameObject {
     private static final int BLOCK_OFFSET_FACTOR = 3;
+    private static final float GROUND_ADDITIVE = 150;
     private final GameObjectCollection gameObjects;
     private float curMinX;
     private float curMaxX;
     private final float halfDimension;
-    private GameObject avatar;
+    private final Avatar avatar;
     private final Terrain terrain;
     private final Tree tree;
     private final Camera camera;
@@ -30,7 +31,7 @@ public class InfiniteWorldGenerator extends GameObject {
      * @param camera Camera object of pepse game
      */
     public InfiniteWorldGenerator(GameObjectCollection gameObjects, Vector2 windowDimensions,
-                                  Terrain terrain, Tree tree, Camera camera, GameObject avatar) {
+                                  Terrain terrain, Tree tree, Camera camera, Avatar avatar) {
         super(Vector2.ZERO, Vector2.ZERO,  null);
         this.halfDimension = windowDimensions.mult(0.5f).x() -
                 (windowDimensions.mult(0.5f).x() % Block.SIZE) + (Block.SIZE * BLOCK_OFFSET_FACTOR);
@@ -43,7 +44,7 @@ public class InfiniteWorldGenerator extends GameObject {
         this.gameObjects = gameObjects;
         gameObjects.addGameObject(this);
         this.terrain.createInRange((int) curMinX, (int) curMaxX);
-        this.tree.treesGenerator((int) curMinX, (int) curMaxX);
+        this.tree.createInRange((int) curMinX, (int) curMaxX);
 
     }
 
@@ -72,7 +73,7 @@ public class InfiniteWorldGenerator extends GameObject {
             float newMinX = camera.getCenter().x() - halfDimension;
             newMinX = newMinX - (newMinX % Block.SIZE) - Block.SIZE;
             terrain.createInRange((int) newMinX, (int) (curMinX));
-            tree.treesGenerator((int) newMinX, (int) (curMinX));
+            tree.createInRange((int) newMinX, (int) (curMinX));
             curMinX = newMinX;
             curMaxX = curMinX + (2 * halfDimension) + Block.SIZE;
         }
@@ -81,7 +82,7 @@ public class InfiniteWorldGenerator extends GameObject {
             float newMaxX = camera.getCenter().x() + halfDimension;
             newMaxX = newMaxX - (newMaxX % Block.SIZE) + Block.SIZE;
             terrain.createInRange((int) curMaxX, (int) (newMaxX));
-            tree.treesGenerator((int) curMaxX, (int) (newMaxX));
+            tree.createInRange((int) curMaxX, (int) (newMaxX));
             curMaxX = newMaxX;
             curMinX = curMaxX - (2 * halfDimension) - Block.SIZE;
         }
@@ -103,9 +104,9 @@ public class InfiniteWorldGenerator extends GameObject {
     }
 
     private void fixAvatarPosition() {
-        if (avatar.getCenter().y() > terrain.groundHeightAt(avatar.getCenter().x()) + 150) {
+        if (avatar.getCenter().y() > terrain.groundHeightAt(avatar.getCenter().x()) + GROUND_ADDITIVE) {
             Vector2 newCenter = new Vector2(avatar.getCenter().x(),
-                    terrain.groundHeightAt(avatar.getCenter().x()) - 30);
+                    terrain.groundHeightAt(avatar.getCenter().x()) - Block.SIZE);
             avatar.setCenter(newCenter);
         }
     }

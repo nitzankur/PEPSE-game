@@ -1,6 +1,5 @@
 package pepse.world.trees;
 
-import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
@@ -39,7 +38,7 @@ public class Tree {
      * @param minX - start of range
      * @param maxX - end of range
      */
-    public void treesGenerator(int minX, int maxX) {
+    public void createInRange(int minX, int maxX) {
         for (int i = minX; i < maxX; i += Block.SIZE) {
             //choose random position for trees
             Random random = new Random(Objects.hash(i, seed));
@@ -64,8 +63,7 @@ public class Tree {
         RectangleRenderable trunkRenderer =
                 new RectangleRenderable(ColorSupplier.approximateColor(BASE_TRUNK_COLOR));
         float y = this.groundHeightAt.apply(i);
-        Block block = new Block(new Vector2(i, y),
-                new Vector2(Block.SIZE, Block.SIZE), trunkRenderer);
+        Block block = new Block(new Vector2(i, y), trunkRenderer);
         block.setTag(PepseGameManager.TREE_TAG);
         gameObjects.addGameObject(block, treeLayer);
 
@@ -74,8 +72,7 @@ public class Tree {
         for (float j = y - Block.SIZE; j > y - Block.SIZE * rand; j -= Block.SIZE) {
             trunkRenderer =
                     new RectangleRenderable(ColorSupplier.approximateColor(BASE_TRUNK_COLOR));
-            block = new Block(new Vector2(i, j),
-                    new Vector2(Block.SIZE, Block.SIZE), trunkRenderer);
+            block = new Block(new Vector2(i, j), trunkRenderer);
             block.setTag(PepseGameManager.TREE_TAG);
             gameObjects.addGameObject(block, treeLayer);
         }

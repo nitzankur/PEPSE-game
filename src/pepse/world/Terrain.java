@@ -19,7 +19,6 @@ public class Terrain {
     private static final int TERRAIN_DEPTH = 20;
     private static final int TERRAIN_FACTOR_SIN = 100;
     private static final int TERRAIN_FACTOR = 150;
-    private static final int TERRAIN_HEIGHT = 10;
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
@@ -33,7 +32,6 @@ public class Terrain {
      * @param WindowDimensions the dimension of screen
      * @param seed - start seed
      */
-
     public Terrain(GameObjectCollection gameObjects, int groundLayer, Vector2 WindowDimensions, int seed) {
 
         this.gameObjects = gameObjects;
@@ -61,23 +59,22 @@ public class Terrain {
      * @param minX - start position
      * @param maxX - end position
      */
-
     public void createInRange(int minX, int maxX) {
         for (int i = minX; i < maxX; i += Block.SIZE) {
             // create new block - along width in given range
             RectangleRenderable blockRenderer =
                     new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
             Vector2 blockPos = calculatePos(i);
-            Block block = new Block(blockPos, new Vector2(Block.SIZE, TERRAIN_DEPTH), blockRenderer);
+            Block block = new Block(blockPos, blockRenderer);
             block.setTag(PepseGameManager.TERRAIN_TAG);
             gameObjects.addGameObject(block, groundLayer);
 
-            for (float j = blockPos.y() + TERRAIN_DEPTH;
-                 j < windowDimensions.y() + TERRAIN_DEPTH * TERRAIN_HEIGHT; j += TERRAIN_DEPTH) {
+            for (float j = blockPos.y() + Block.SIZE;
+                 j < windowDimensions.y() + TERRAIN_DEPTH * Block.SIZE; j += Block.SIZE) {
                 //creates block in column
                 Vector2 blockYPos = new Vector2(blockPos.x(), j);
                 blockRenderer = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
-                block = new Block(blockYPos, new Vector2(Block.SIZE, TERRAIN_DEPTH), blockRenderer);
+                block = new Block(blockYPos, blockRenderer);
                 block.setTag(PepseGameManager.BOTTOM_TERRAIN_TAG);
                 gameObjects.addGameObject(block, PepseGameManager.BOTTOM_TERRAIN_LAYER);
             }

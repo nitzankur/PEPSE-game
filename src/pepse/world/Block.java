@@ -17,8 +17,8 @@ public class Block extends GameObject {
      * @param renderable    The renderable representing the object. Can be null, in which case
      *                      the GameObject will not be rendered.
      */
-    public Block(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
-        super(topLeftCorner, dimensions, renderable);
+    public Block(Vector2 topLeftCorner, Renderable renderable) {
+        super(topLeftCorner, Vector2.ONES.mult(SIZE), renderable);
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         physics().setMass(GameObjectPhysics.IMMOVABLE_MASS);
     }

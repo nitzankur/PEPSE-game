@@ -58,7 +58,7 @@ public class PepseGameManager extends GameManager {
         Tree tree = new Tree(gameObjects(), TREE_LAYER,
                 terrain::groundHeightAt, TERRAIN_SEED);
 
-        GameObject avatar = initializeAvatar(windowController,inputListener,imageReader,terrain);
+        Avatar avatar = initializeAvatar(windowController, inputListener, imageReader, terrain);
 
         //initialize Infinite World
         new InfiniteWorldGenerator(gameObjects(), windowController.getWindowDimensions(),
@@ -95,7 +95,7 @@ public class PepseGameManager extends GameManager {
      * @return avatar game object
      */
 
-    private GameObject initializeAvatar(WindowController windowController, UserInputListener inputListener, ImageReader
+    private Avatar initializeAvatar(WindowController windowController, UserInputListener inputListener, ImageReader
                                   imageReader, Terrain terrain){
         //initialize avatar
         Vector2 initialAvatarLocation =
@@ -104,7 +104,7 @@ public class PepseGameManager extends GameManager {
                                 windowController.getWindowDimensions().mult(AVATAR_FACTOR_LOCATION).x()) -
                                 AVATAR_ADDITIVE_LOCATION);
 
-        GameObject avatar = Avatar.create(gameObjects(), Layer.DEFAULT,
+        Avatar avatar = Avatar.create(gameObjects(), Layer.DEFAULT,
                 initialAvatarLocation, inputListener, imageReader);
 
         //initialize camera
