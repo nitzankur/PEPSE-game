@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
 public class Avatar extends GameObject {
     private static final float VELOCITY_X = 300;
     private static final float VELOCITY_Y = -300;
-    private static final float GRAVITY = 300;
+    private static final float GRAVITY = 500;
     private static final float INITIAL_ENERGY = 100;
     private static final float ENERGY_VALUE = 0.5f;
     private static final String IDLE_ANIMATION_NAME = "assets/link_idle_";
@@ -28,6 +28,8 @@ public class Avatar extends GameObject {
     private static final String PNG_FILE_SUFFIX = ".png";
     private static final float AVATAR_SIZE = 50;
     private static final String AVATAR_TAG = "avatar";
+    private static final float START_SLOWING_DOWN = -150;
+    private static final float SLOW_DOWN_FACTOR = 0.98f;
     private final UserInputListener inputListener;
     private final AnimationRenderable idleAnimation;
     private final AnimationRenderable walkAnimation;
@@ -158,6 +160,14 @@ public class Avatar extends GameObject {
         }
     }
 
+    private void updateVelocityY() {
+        if (transform().getVelocity().y() > 0 && getCenter().y() > START_SLOWING_DOWN) {
+            transform().setAccelerationY(SLOW_DOWN_FACTOR * transform().getAcceleration().y());
+        } else {
+            transform().setAccelerationY(GRAVITY);
+        }
+    }
+
     /**
      * update the avatar, check movement and update energy
      * @param deltaTime The time elapsed, in seconds, since the last frame. Can
@@ -178,5 +188,7 @@ public class Avatar extends GameObject {
         if (!walked && !flew && !jumped) {
             renderer().setRenderable(idleAnimation);
         }
+
+        updateVelocityY();
     }
 }
