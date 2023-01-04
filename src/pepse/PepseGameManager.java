@@ -34,7 +34,6 @@ public class PepseGameManager extends GameManager {
     private static final int TERRAIN_SEED = 20;
     private static final int SUN_ADDITIVE_LAYER = 10;
     private static final int AVATAR_ADDITIVE_LOCATION = 60;
-
     private static final float AVATAR_FACTOR_LOCATION = 0.5f;
 
     private void createTagLayerMap() {
